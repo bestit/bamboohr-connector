@@ -1,0 +1,37 @@
+{
+  "name": "bestit/php_codesniffer",
+  "description": "PHP_CodeSniffer ruleset and custom rules from best it.",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Tim Kellner",
+      "email": "tim.kellner@bestit-online.de"
+    }, {
+      "name": "Nick Lubisch",
+      "email": "nick.lubisch@bestit-online.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "BestIt\\": "src/Standards/BestIt"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\BestIt\\": "tests/Standards/BestIt"
+    }
+  },
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.0",
+    "slevomat/coding-standard": "^2.4",
+    "squizlabs/php_codesniffer": "^2.0",
+    "phpmailer/phpmailer": "^6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0",
+    "phpmd/phpmd": "^2.6",
+    "sebastian/phpcpd": "^3.0",
+    "phploc/phploc": "^4.0"
+  }
+}

@@ -1,0 +1,7 @@
+- Version 2.1
+    - The connector automatically "confirms" the absences after they are inserted into Papershift. (no need to do it manually anymore)
+    - Added .gitignore
+    - Updated README.md
+
+- Version 2.0
+    - Rewritten from functional to object oriented.
