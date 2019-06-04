@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BambooHRConnector;
 
+use Exception;
+
 /**
  * Class PapershiftAbsences
  *
@@ -57,6 +59,7 @@ class PapershiftAbsences
      * @param array $array Contains all absences from Bamboo
      *
      * @return void
+     * @throws Exception
      */
     public function addAbsencesToPapershift($array): void
     {
@@ -96,6 +99,7 @@ class PapershiftAbsences
      * - Confirm
      *
      * @return void
+     * @throws Exception
      */
     public function confirmPapershiftAbsences(): void
     {

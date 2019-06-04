@@ -1,3 +1,6 @@
+- Version 3.0
+    - All absences are now being imported from the day that the Cronjob has run forward.
+
 - Version 2.1
     - The connector automatically "confirms" the absences after they are inserted into Papershift. (no need to do it manually anymore)
     - Added .gitignore

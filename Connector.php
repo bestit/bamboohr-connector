@@ -101,7 +101,7 @@ class Connector
      */
     public function addAbsencesFromBambooHRToPapershift(): void
     {
-        $this->logger->transferDailyLogToGlobal();
+//        $this->logger->transferDailyLogToGlobal();
         $bambooAbsencesArray = $this->bamboo->getBambooHRAbsences();
         $this->papershift->addAbsencesToPapershift($bambooAbsencesArray);
         $this->papershift->confirmPapershiftAbsences();

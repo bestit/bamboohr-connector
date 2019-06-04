@@ -37,15 +37,15 @@ class Config
 
         $this->config = [
             'bamboohr' => [
-                'api_token' => '',
+                'api_token' => '8f912006d3d165af282ea16be488d668d2d41915',
                 'company' => 'bestitonline',
                 'filter_enabled' => true,
                 'filter_array' => ['Abwesend ','Abwesend', 'Geschäftsreise', 'Homeoffice'],
-                'date' => date('Y-m-d', strtotime('tomorrow')),
+                'date' => date('Y-m-d', strtotime('today')),
                 'status' => 'approved'
             ],
             'papershift' => [
-                'api_token' => '',
+                'api_token' => '8f912006d3d165af282ea16be488d668d2d41915',
                 'api_absences_url' => 'https://app.papershift.com/public_api/v1/absences',
                 'api_absences_confirm_url' => 'https://app.papershift.com/public_api/v1/absences/confirm',
                 'start_time_days' => 'T08:00:00+01:00',
@@ -54,14 +54,14 @@ class Config
                 'full_day' => true,
             ],
             'mail' => [
-                'smtp_host' => '',
+                'smtp_host' => 'dsadasdsa',
                 'smtp_auth' => true,
-                'username' => '',
-                'password' => '',
-                'smtp_secure' => '',
-                'port' => '',
-                'send_from' => '',
-                'send_to' => ''
+                'username' => 'dasdsadsa',
+                'password' => 'dsadsadsa',
+                'smtp_secure' => 'dasdsadsa',
+                'port' => 'dsadasdas',
+                'send_from' => 'dsadsadsa',
+                'send_to' => 'dsadsadsa'
             ]
         ];
     }

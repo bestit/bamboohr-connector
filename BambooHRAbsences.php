@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace BambooHRConnector;
 
+use Exception;
+use SimpleXMLElement;
+
 /**
  * Class BambooHRAbsences
  *
@@ -29,7 +32,7 @@ class BambooHRAbsences
     /**
      * The employee data
      *
-     * @var $employeesXML \SimpleXMLElement
+     * @var $employeesXML SimpleXMLElement
      */
     private $employeesXML;
 
@@ -85,10 +88,13 @@ class BambooHRAbsences
      *  - Get all the absences (with set date) for all the employees
      *
      * @return array Returns an array
+     * @throws Exception
      */
     public function getBambooHRAbsences(): array
     {
         $this->bambooAPI->setSecretKey($this->config->getConfig('bamboohr', 'api_token'));
+
+        /** @var BambooHTTPResponse $employeeDirectoryRequestArray */
         $employeeDirectoryRequestArray = $this->bambooAPI->getDirectory();
 
         $httpcode = $employeeDirectoryRequestArray->statusCode;
@@ -100,33 +106,48 @@ class BambooHRAbsences
         $this->employeeCounter = $this->getNumberOfEmployees($this->employeesXML);
 
         while ($this->employeeCounter > -1) {
-            $employeeExternalID = $this->getEmployeeExternalID($this->employeesXML, $this->employeeCounter);
 
-            $timeOffRequestsArray = $this->bambooAPI
-                ->getTimeOffRequests($this->config->getConfig('bamboohr', 'date'), $this->config
-                    ->getConfig('bamboohr', 'date'), $this->config
-                    ->getConfig('bamboohr', 'status'), '', $employeeExternalID);
-            $timeOffRequestsXML = $timeOffRequestsArray->getContentXML();
+            if ($this->employeeCounter == 14){
+                $employeeExternalID = $this->getEmployeeExternalID($this->employeesXML, $this->employeeCounter);
 
-            for ($i = 0; $i < sizeof($timeOffRequestsXML->request); $i++) {
-                $absence = [
-                    'id' => $employeeExternalID,
-                    'start' => $this->config->getConfig('bamboohr', 'date'),
-                    'end' => $this->config->getConfig('bamboohr', 'date'),
-                    'type' => (string) $timeOffRequestsXML->request[$i]->type,
-                    'unit' => (string) $timeOffRequestsXML->request[$i]->amount->attributes()['unit'],
-                    'amount' => (string) $timeOffRequestsXML->request[$i]->amount,
-                    'full_day' => false
-                ];
+                /** @var BambooHTTPResponse $timeOffRequestsArray */
+                $timeOffRequestsArray = $this->bambooAPI
+                    ->getTimeOffRequests(
+                        $this->config->getConfig('bamboohr', 'date'),
+                        '2019-12-31',
+                        $this->config->getConfig('bamboohr', 'status'), '',
+                        $employeeExternalID
+                    );
+                $timeOffRequestsXML = $timeOffRequestsArray->getContentXML();
 
-                if ($this->config->getConfig('bamboohr', 'filter_enabled') === false ||
-                    !in_array($absence['type'], $this->config->getConfig('bamboohr', 'filter_array'))
-                ) {
-                    $this->absencesArray[] = $absence;
+                var_dump($timeOffRequestsXML);exit;
+
+                for ($i = 0; $i < sizeof($timeOffRequestsXML->request); $i++) {
+                    $absence = [
+                        'id' => $employeeExternalID,
+                        'name' => (string) $timeOffRequestsXML->request[$i]->employee,
+                        'start' => (string) $timeOffRequestsXML->request[$i]->start,
+                        'end' => (string) $timeOffRequestsXML->request[$i]->end,
+                        'type' => (string) $timeOffRequestsXML->request[$i]->type,
+                        'unit' => (string) $timeOffRequestsXML->request[$i]->amount->attributes()['unit'],
+                        'amount' => (string) $timeOffRequestsXML->request[$i]->amount,
+                        'full_day' => false
+                    ];
+
+                    if ($this->config->getConfig('bamboohr', 'filter_enabled') === false ||
+                        !in_array($absence['type'], $this->config->getConfig('bamboohr', 'filter_array'))
+                    ) {
+                        $this->absencesArray[] = $absence;
+                    }
                 }
             }
             $this->employeeCounter--;
         }
+
+        var_dump($this->absencesArray);
+
+        exit;
+
         return $this->absencesArray;
     }
 
@@ -135,7 +156,7 @@ class BambooHRAbsences
      *
      * Get the number of employees
      *
-     * @param \SimpleXMLElement $simplexml Array with the employees
+     * @param SimpleXMLElement $simplexml Array with the employees
      *
      * @return int returns (number of employees - 1) (because count starts from 0)
      */
@@ -149,7 +170,7 @@ class BambooHRAbsences
      *
      * Get the external ID of an employee
      *
-     * @param \SimpleXMLElement $simplexml Array with the employees
+     * @param SimpleXMLElement $simplexml Array with the employees
      * @param int $index employee counter
      *
      * @return int returns the externalID of an employee
